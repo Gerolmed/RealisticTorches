@@ -6,11 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.material.RedstoneTorch;
-import org.bukkit.material.Torch;
-import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,8 +32,6 @@ public class BlockManager implements Runnable {
         if(blockCache.containsKey(block.getLocation()))
             return;
 
-        System.out.println("Torch added: " + block.getLocation());
-
         blockCache.put(block.getLocation(), time);
     }
 
@@ -49,8 +43,6 @@ public class BlockManager implements Runnable {
 
         if(!blockCache.containsKey(block.getLocation()))
             return;
-
-        System.out.println("Torch removed: " + block.getLocation());
 
         blockCache.remove(block.getLocation());
     }
@@ -64,8 +56,6 @@ public class BlockManager implements Runnable {
             int time = blockCache.get(location);
             time --;
             blockCache.put(location, time);
-            System.out.println("Updated: " + location);
-
 
             if(time <= 0) {
                 locationsToRemove.add(location);
@@ -76,7 +66,6 @@ public class BlockManager implements Runnable {
             Material material = Material.REDSTONE_TORCH_ON;
 
             byte direction = location.getBlock().getData();
-            System.out.println(direction);
 
             location.getBlock().setTypeIdAndData(material.ordinal(), direction, true);
 

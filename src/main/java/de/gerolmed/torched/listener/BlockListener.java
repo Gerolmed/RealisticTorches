@@ -2,7 +2,6 @@ package de.gerolmed.torched.listener;
 
 import de.gerolmed.torched.Main;
 import de.gerolmed.torched.utils.BasicEvent;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
