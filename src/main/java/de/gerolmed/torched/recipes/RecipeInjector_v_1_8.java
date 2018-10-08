@@ -2,7 +2,6 @@ package de.gerolmed.torched.recipes;
 
 import de.gerolmed.torched.Main;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;

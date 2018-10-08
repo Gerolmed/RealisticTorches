@@ -20,9 +20,6 @@ public class BlockListener extends BasicEvent {
     @EventHandler(priority =  EventPriority.MONITOR)
     public void onPlace(BlockPlaceEvent event) {
 
-        if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
-            return;
-
         if(event.getItemInHand().hasItemMeta() &&
                 event.getItemInHand().getItemMeta().hasDisplayName() &&
                 event.getItemInHand().getItemMeta().getDisplayName().equals(plugin.getDataHolder().getPermaTorch())) {
@@ -41,7 +38,8 @@ public class BlockListener extends BasicEvent {
         if(event.getBlock().getType() == Material.TORCH) {
 
             if(!plugin.getBlockManager().isTorch(event.getBlock())) {
-                event.setDropItems(false);
+                event.setCancelled(true);
+                event.getBlock().setType(Material.AIR);
 
                 ItemStack item = new ItemStack(Material.TORCH);
                 ItemMeta itemMeta = item.getItemMeta();
