@@ -14,6 +14,7 @@ import java.util.Map;
 
 public class BlockManager implements Runnable {
     private HashMap<Location, Integer> blockCache;
+    private ArrayList<Location> persistants, unlits;
 
     private Main plugin;
 
@@ -21,6 +22,8 @@ public class BlockManager implements Runnable {
         this.plugin = plugin;
 
         blockCache = new HashMap<Location, Integer>();
+        persistants = new ArrayList<Location>();
+        unlits = new ArrayList<Location>();
 
         loadFromYml();
 
@@ -32,11 +35,19 @@ public class BlockManager implements Runnable {
         if(blockCache.containsKey(block.getLocation()))
             return;
 
+        System.out.println("Block added");
+
         blockCache.put(block.getLocation(), time);
     }
 
     public boolean isTorch(Block block) {
-        return blockCache.containsKey(block.getLocation());
+        Location loc = block.getLocation();
+        return blockCache.containsKey(loc);
+    }
+
+    public boolean isPersistent(Block block) {
+        Location loc = block.getLocation();
+        return persistants.contains(loc);
     }
 
     public void removeBlock(Block block) {
@@ -44,7 +55,25 @@ public class BlockManager implements Runnable {
         if(!blockCache.containsKey(block.getLocation()))
             return;
 
+        System.out.println("Block removed");
         blockCache.remove(block.getLocation());
+    }
+
+
+    public void addPersistent(Block block) {
+
+        if(persistants.contains(block.getLocation()))
+            return;
+
+        persistants.add(block.getLocation());
+    }
+
+    public void removePersistent(Block block) {
+
+        if(!persistants.contains(block.getLocation()))
+            return;
+
+        persistants.remove(block.getLocation());
     }
 
     @SuppressWarnings("deprecation")
@@ -56,7 +85,7 @@ public class BlockManager implements Runnable {
             int time = blockCache.get(location);
             time --;
             blockCache.put(location, time);
-
+            System.out.println("Block updated: "+time);
             if(time <= 0) {
                 locationsToRemove.add(location);
             }
@@ -85,15 +114,36 @@ public class BlockManager implements Runnable {
         } catch (Exception ex) {
             System.out.println("Torch data didn't load properly!");
         }
+        try {
+            ConfigurationSection configurationSection = ConfigHolder.Configs.TORCHES.getConfig().getConfigurationSection("permanent");
+
+            for (String key : configurationSection.getValues(false).keySet()) {
+                persistants.add((Location) configurationSection.get(key + ".loc"));
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Torch data didn't load properly!");
+        }
     }
 
     public void saveYml() {
-        int i = 0;
-        ConfigHolder.Configs.TORCHES.getConfig().set("list", null);
-        for(Map.Entry<Location, Integer> entry : blockCache.entrySet()) {
-            ConfigHolder.Configs.TORCHES.getConfig().set("list."+i+".loc", entry.getKey());
-            ConfigHolder.Configs.TORCHES.getConfig().set("list."+i+".time", entry.getValue());
-            i++;
+        {
+            int i = 0;
+            ConfigHolder.Configs.TORCHES.getConfig().set("list", null);
+            for(Map.Entry<Location, Integer> entry : blockCache.entrySet()) {
+                ConfigHolder.Configs.TORCHES.getConfig().set("list."+i+".loc", entry.getKey());
+                ConfigHolder.Configs.TORCHES.getConfig().set("list."+i+".time", entry.getValue());
+                i++;
+            }
+        }
+
+        {
+            int i = 0;
+            ConfigHolder.Configs.TORCHES.getConfig().set("permanent", null);
+            for(Location loc : persistants) {
+                ConfigHolder.Configs.TORCHES.getConfig().set("permanent."+i+".loc", persistants);
+                i++;
+            }
         }
 
         ConfigHolder.Configs.TORCHES.save();

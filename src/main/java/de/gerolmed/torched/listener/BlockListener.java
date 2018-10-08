@@ -2,7 +2,10 @@ package de.gerolmed.torched.listener;
 
 import de.gerolmed.torched.Main;
 import de.gerolmed.torched.utils.BasicEvent;
+import de.gerolmed.torched.utils.BlockManager;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -19,15 +22,22 @@ public class BlockListener extends BasicEvent {
     @EventHandler(priority =  EventPriority.MONITOR)
     public void onPlace(BlockPlaceEvent event) {
 
-        if(event.getItemInHand().hasItemMeta() &&
-                event.getItemInHand().getItemMeta().hasDisplayName() &&
-                event.getItemInHand().getItemMeta().getDisplayName().equals(plugin.getDataHolder().getPermaTorch())) {
-            return;
+        Player player = event.getPlayer();
+
+        if(event.getBlock().getType() == Material.TORCH) {
+            if(event.getItemInHand().hasItemMeta() &&
+                    event.getItemInHand().getItemMeta().hasDisplayName() &&
+                        event.getItemInHand().getItemMeta().getDisplayName().equals(plugin.getDataHolder().getPermaTorch())) {
+                plugin.getBlockManager().addPersistent(event.getBlock());
+            }
+            else if(plugin.getDataHolder().isEnablePermanentPermission() && player.hasPermission(plugin.getDataHolder().getPermanentPermssion()))
+                return;
+            else if(plugin.getDataHolder().isEnableCreativePermanent() && player.getGameMode() == GameMode.CREATIVE)
+                return;
+            else
+                plugin.getBlockManager().addBlock(event.getBlock(), plugin.getDataHolder().getResetTime());
+
         }
-
-
-        if(event.getBlock().getType() == Material.TORCH)
-            plugin.getBlockManager().addBlock(event.getBlock(), plugin.getDataHolder().getResetTime());
     }
 
     @EventHandler(priority =  EventPriority.MONITOR)
@@ -35,8 +45,8 @@ public class BlockListener extends BasicEvent {
 
 
         if(event.getBlock().getType() == Material.TORCH) {
-
-            if(!plugin.getBlockManager().isTorch(event.getBlock())) {
+            BlockManager blockManager = plugin.getBlockManager();
+            if(blockManager.isPersistent(event.getBlock())) {
                 event.setCancelled(true);
                 event.getBlock().setType(Material.AIR);
 
@@ -45,10 +55,10 @@ public class BlockListener extends BasicEvent {
                 itemMeta.setDisplayName(plugin.getDataHolder().getPermaTorch());
                 item.setItemMeta(itemMeta);
 
+                blockManager.removePersistent(event.getBlock());
                 event.getBlock().getLocation().getWorld().dropItemNaturally(event.getBlock().getLocation(), item);
-            }
-
-            plugin.getBlockManager().removeBlock(event.getBlock());
+            } else
+                blockManager.removeBlock(event.getBlock());
         }
     }
 }

@@ -6,3 +6,15 @@ permaTorch: "&fPermanent Torch"
 enableCrafting: true
 #Use coal blocks instead of coal for crafting?
 expensiveCrafting: false
+
+#If players with this permission place torches they will not go out.
+#If those torches are broken they will turn into normal torches.
+#Permanent torches behave as usual.
+permanentPermission: "torch.permanent"
+#Should the permission be enabled. If false the permission will not be used
+enablePermanentPermission: true
+
+#If players with game mode creative place torches they will not go out.
+#If those torches are broken they will turn into normal torches.
+#Permanent torches behave as usual.
+enableCreativePermanent: true
