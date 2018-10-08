@@ -1,43 +1,31 @@
 package de.gerolmed.torched.recipes;
 
 import de.gerolmed.torched.Main;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Server;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.Bukkit;
 
 public class RecipeManager {
 
+	RecipeInjection recipeInjection;
+
 	public RecipeManager(Main main) {
-		if(main.getDataHolder().isEnableCrafting())
-			registerRecipes(main, main.getServer());
+		chooseVersion();
+		registerRecipes(main);
 	}
-	
-	@SuppressWarnings("deprecation")
-	private void registerRecipes(Main main, Server server) {
-		{
-			ItemStack item = new ItemStack(Material.TORCH);
-			ItemMeta itemMeta = item.getItemMeta();
-			itemMeta.setDisplayName(main.getDataHolder().getPermaTorch());
-			item.setItemMeta(itemMeta);
-			ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(main, "permatorch"), item);
-			recipe.shape(
-					  "ccc"
-					, "csc"
-					, "ccc"
-					);
 
-			if(main.getDataHolder().isExpensiveCrafting())
-				recipe.setIngredient('c', Material.COAL_BLOCK);
-			else
-				recipe.setIngredient('c', Material.COAL);
+	private void chooseVersion() {
 
-			recipe.setIngredient('s', Material.STICK);
-			server.addRecipe(recipe);
-			
-		}
+
+		String version = Bukkit.getVersion();
+
+		if(version.contains("1.8"))
+			recipeInjection = new RecipeInjector_v_1_8();
+		else
+		// >1.9 fallback to 1.12 version
+			recipeInjection = new RecipeInjector_v_1_12();
+	}
+
+	private void registerRecipes(Main main) {
+		recipeInjection.registerRecipes(main);
 	}
 	
 }
