@@ -1,0 +1,8 @@
+#Time until torch will be unlit
+resetTime: 60
+#The name of the permanent torch
+permaTorch: "&fPermanent Torch"
+#Should the players be able to craft the permanent torch?
+enableCrafting: true
+#Use coal blocks instead of coal for crafting?
+expensiveCrafting: false
