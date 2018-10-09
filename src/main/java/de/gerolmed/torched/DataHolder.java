@@ -9,7 +9,8 @@ public class DataHolder {
     private boolean enableCrafting = true,
             expensiveCrafting = false,
             enablePermanentPermission = false,
-            enableCreativePermanent = false;;
+            enableCreativePermanent = false,
+            makeAir = false;
 
     public DataHolder() {
         try {
@@ -20,6 +21,8 @@ public class DataHolder {
             setExpensiveCrafting(ConfigHolder.Configs.CONFIG.getConfig().getBoolean("expensiveCrafting"));
             setEnableCreativePermanent(ConfigHolder.Configs.CONFIG.getConfig().getBoolean("enableCreativePermanent"));
             setEnablePermanentPermission(ConfigHolder.Configs.CONFIG.getConfig().getBoolean("enablePermanentPermission"));
+            setMakeAir(ConfigHolder.Configs.CONFIG.getConfig().getBoolean("makeAir"));
+
         } catch (Exception ex) {
             System.out.println("Somethings wrong with the config! -> Be sure to get the latest config from: https://www.spigotmc.org/resources/realistic-torches-opensource.61239/");
         }
@@ -79,5 +82,13 @@ public class DataHolder {
 
     public void setEnableCreativePermanent(boolean enableCreativePermanent) {
         this.enableCreativePermanent = enableCreativePermanent;
+    }
+
+    public boolean isMakeAir() {
+        return makeAir;
+    }
+
+    public void setMakeAir(boolean makeAir) {
+        this.makeAir = makeAir;
     }
 }

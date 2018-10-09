@@ -18,3 +18,6 @@ enablePermanentPermission: false
 #If those torches are broken they will turn into normal torches.
 #Permanent torches behave as usual.
 enableCreativePermanent: true
+
+#Make torches to air instead of redstone torch
+makeAir: false

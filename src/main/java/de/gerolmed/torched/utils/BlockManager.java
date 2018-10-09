@@ -89,10 +89,11 @@ public class BlockManager implements Runnable {
 
         for (Location location : locationsToRemove) {
             Material material = Material.REDSTONE_TORCH_ON;
-
             byte direction = location.getBlock().getData();
-
-            location.getBlock().setTypeIdAndData(material.ordinal(), direction, true);
+            if(plugin.getDataHolder().isMakeAir())
+                location.getBlock().setType(Material.AIR);
+            else
+                location.getBlock().setTypeIdAndData(material.ordinal(), direction, true);
 
 
             removeBlock(location.getBlock());
