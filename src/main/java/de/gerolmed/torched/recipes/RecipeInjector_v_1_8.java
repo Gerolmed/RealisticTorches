@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class RecipeInjector_v_1_8 implements RecipeInjection{
 
 
+    @SuppressWarnings("deprecation")
     public void registerRecipes(Main plugin) {
         Server server = plugin.getServer();
         {

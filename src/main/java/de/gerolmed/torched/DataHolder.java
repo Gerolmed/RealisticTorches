@@ -22,8 +22,6 @@ public class DataHolder {
             setEnablePermanentPermission(ConfigHolder.Configs.CONFIG.getConfig().getBoolean("enablePermanentPermission"));
         } catch (Exception ex) {
             System.out.println("Somethings wrong with the config! -> Be sure to get the latest config from: https://www.spigotmc.org/resources/realistic-torches-opensource.61239/");
-        } finally {
-            System.out.println("Successfully loaded all values!");
         }
     }
 

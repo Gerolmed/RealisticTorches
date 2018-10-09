@@ -3,10 +3,15 @@ package de.gerolmed.torched;
 import de.gerolmed.torched.listener.BlockListener;
 import de.gerolmed.torched.recipes.RecipeManager;
 import de.gerolmed.torched.utils.BlockManager;
+import de.gerolmed.torched.utils.TorchLocation;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 
+    static {
+        ConfigurationSerialization.registerClass(TorchLocation.class);
+    }
 
     private static Main instance;
 

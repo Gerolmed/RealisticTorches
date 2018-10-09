@@ -12,7 +12,7 @@ expensiveCrafting: false
 #Permanent torches behave as usual.
 permanentPermission: "torch.permanent"
 #Should the permission be enabled. If false the permission will not be used
-enablePermanentPermission: true
+enablePermanentPermission: false
 
 #If players with game mode creative place torches they will not go out.
 #If those torches are broken they will turn into normal torches.

@@ -35,8 +35,6 @@ public class BlockManager implements Runnable {
         if(blockCache.containsKey(block.getLocation()))
             return;
 
-        System.out.println("Block added");
-
         blockCache.put(block.getLocation(), time);
     }
 
@@ -55,7 +53,6 @@ public class BlockManager implements Runnable {
         if(!blockCache.containsKey(block.getLocation()))
             return;
 
-        System.out.println("Block removed");
         blockCache.remove(block.getLocation());
     }
 
@@ -85,7 +82,6 @@ public class BlockManager implements Runnable {
             int time = blockCache.get(location);
             time --;
             blockCache.put(location, time);
-            System.out.println("Block updated: "+time);
             if(time <= 0) {
                 locationsToRemove.add(location);
             }
@@ -108,7 +104,13 @@ public class BlockManager implements Runnable {
             ConfigurationSection configurationSection = ConfigHolder.Configs.TORCHES.getConfig().getConfigurationSection("list");
 
             for (String key : configurationSection.getValues(false).keySet()) {
-                blockCache.put((Location) configurationSection.get(key + ".loc"), configurationSection.getInt(key + ".time"));
+                TorchLocation torchLocation = (TorchLocation) configurationSection.get(key + ".loc");
+                Location location = torchLocation.toLocation();
+
+                if(location == null)
+                    continue;
+
+                blockCache.put(location, configurationSection.getInt(key + ".time"));
             }
 
         } catch (Exception ex) {
@@ -118,11 +120,17 @@ public class BlockManager implements Runnable {
             ConfigurationSection configurationSection = ConfigHolder.Configs.TORCHES.getConfig().getConfigurationSection("permanent");
 
             for (String key : configurationSection.getValues(false).keySet()) {
-                persistants.add((Location) configurationSection.get(key + ".loc"));
+                TorchLocation torchLocation = (TorchLocation) configurationSection.get(key + ".loc");
+                Location location = torchLocation.toLocation();
+
+                if(location == null)
+                    continue;
+
+                persistants.add(location);
             }
 
         } catch (Exception ex) {
-            System.out.println("Torch data didn't load properly!");
+            System.out.println("Permanent torch data didn't load properly!");
         }
     }
 
@@ -131,7 +139,7 @@ public class BlockManager implements Runnable {
             int i = 0;
             ConfigHolder.Configs.TORCHES.getConfig().set("list", null);
             for(Map.Entry<Location, Integer> entry : blockCache.entrySet()) {
-                ConfigHolder.Configs.TORCHES.getConfig().set("list."+i+".loc", entry.getKey());
+                ConfigHolder.Configs.TORCHES.getConfig().set("list."+i+".loc", new TorchLocation(entry.getKey()));
                 ConfigHolder.Configs.TORCHES.getConfig().set("list."+i+".time", entry.getValue());
                 i++;
             }
@@ -141,7 +149,7 @@ public class BlockManager implements Runnable {
             int i = 0;
             ConfigHolder.Configs.TORCHES.getConfig().set("permanent", null);
             for(Location loc : persistants) {
-                ConfigHolder.Configs.TORCHES.getConfig().set("permanent."+i+".loc", persistants);
+                ConfigHolder.Configs.TORCHES.getConfig().set("permanent."+i+".loc", new TorchLocation(loc));
                 i++;
             }
         }
