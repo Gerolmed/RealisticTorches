@@ -156,7 +156,7 @@ public class BlockManager implements Runnable {
             System.out.println("Permanent torch data didn't load properly!");
         }
         try {
-            ConfigurationSection configurationSection = ConfigHolder.Configs.TORCHES.getConfig().getConfigurationSection("unlits");
+            ConfigurationSection configurationSection = ConfigHolder.Configs.TORCHES.getConfig().getConfigurationSection("unlit");
 
             for (String key : configurationSection.getValues(false).keySet()) {
                 TorchLocation torchLocation = (TorchLocation) configurationSection.get(key + ".loc");
@@ -189,6 +189,15 @@ public class BlockManager implements Runnable {
             ConfigHolder.Configs.TORCHES.getConfig().set("permanent", null);
             for(Location loc : persistants) {
                 ConfigHolder.Configs.TORCHES.getConfig().set("permanent."+i+".loc", new TorchLocation(loc));
+                i++;
+            }
+        }
+
+        {
+            int i = 0;
+            ConfigHolder.Configs.TORCHES.getConfig().set("unlit", null);
+            for(Location loc : unlits) {
+                ConfigHolder.Configs.TORCHES.getConfig().set("unlit."+i+".loc", new TorchLocation(loc));
                 i++;
             }
         }

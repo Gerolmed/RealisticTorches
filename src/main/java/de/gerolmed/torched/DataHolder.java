@@ -17,7 +17,7 @@ public class DataHolder {
         try {
             setResetTime(ConfigHolder.Configs.CONFIG.getConfig().getInt("resetTime"));
             setPermaTorch(ConfigHolder.Configs.CONFIG.getConfig().getString("permaTorch"));
-            setPermanentPermssion(ConfigHolder.Configs.CONFIG.getConfig().getString("permanentPermission"));
+            setPermanentPermission(ConfigHolder.Configs.CONFIG.getConfig().getString("permanentPermission"));
             setUnlitTorch(ConfigHolder.Configs.CONFIG.getConfig().getString("unlitTorch"));
             setEnableCrafting(ConfigHolder.Configs.CONFIG.getConfig().getBoolean("enableCrafting"));
             setExpensiveCrafting(ConfigHolder.Configs.CONFIG.getConfig().getBoolean("expensiveCrafting"));
@@ -62,11 +62,11 @@ public class DataHolder {
         this.expensiveCrafting = expensiveCrafting;
     }
 
-    public String getPermanentPermssion() {
+    public String getPermanentPermission() {
         return permanentPermission;
     }
 
-    public void setPermanentPermssion(String permanentPermission) {
+    public void setPermanentPermission(String permanentPermission) {
         this.permanentPermission = permanentPermission;
     }
 
@@ -95,7 +95,7 @@ public class DataHolder {
     }
 
     public String getUnlitTorch() {
-        return unlitTorch;
+        return ChatColor.translateAlternateColorCodes('&', unlitTorch);
     }
 
     public void setUnlitTorch(String unlitTorch) {

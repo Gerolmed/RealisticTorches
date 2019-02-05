@@ -16,6 +16,7 @@ public class InteractListener extends BasicEvent {
         super(plugin);
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.MONITOR)
     public void interact(PlayerInteractEvent event) {
         if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -26,7 +27,16 @@ public class InteractListener extends BasicEvent {
                 return;
 
             Block block = event.getClickedBlock();
-            plugin.getBlockManager().addBlock(block, plugin.getDataHolder().getResetTime());
+
+            if( plugin.getBlockManager().isUnlit(block)) {
+                plugin.getBlockManager().removeUnlit(block);
+
+                byte direction = block.getData();
+                block.setTypeIdAndData(Material.TORCH.ordinal(), direction, true);
+
+                plugin.getBlockManager().addBlock(block, plugin.getDataHolder().getResetTime());
+
+            }
         }
     }
 }
