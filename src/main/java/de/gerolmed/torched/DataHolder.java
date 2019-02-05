@@ -5,7 +5,8 @@ import org.bukkit.ChatColor;
 public class DataHolder {
     private int resetTime = 60*10;
     private String permaTorch = "&fPermanent Torch",
-            permanentPermission = "torch.permanent";
+            permanentPermission = "torch.permanent",
+            unlitTorch = "torch.unlit";
     private boolean enableCrafting = true,
             expensiveCrafting = false,
             enablePermanentPermission = false,
@@ -17,6 +18,7 @@ public class DataHolder {
             setResetTime(ConfigHolder.Configs.CONFIG.getConfig().getInt("resetTime"));
             setPermaTorch(ConfigHolder.Configs.CONFIG.getConfig().getString("permaTorch"));
             setPermanentPermssion(ConfigHolder.Configs.CONFIG.getConfig().getString("permanentPermission"));
+            setUnlitTorch(ConfigHolder.Configs.CONFIG.getConfig().getString("unlitTorch"));
             setEnableCrafting(ConfigHolder.Configs.CONFIG.getConfig().getBoolean("enableCrafting"));
             setExpensiveCrafting(ConfigHolder.Configs.CONFIG.getConfig().getBoolean("expensiveCrafting"));
             setEnableCreativePermanent(ConfigHolder.Configs.CONFIG.getConfig().getBoolean("enableCreativePermanent"));
@@ -90,5 +92,13 @@ public class DataHolder {
 
     public void setMakeAir(boolean makeAir) {
         this.makeAir = makeAir;
+    }
+
+    public String getUnlitTorch() {
+        return unlitTorch;
+    }
+
+    public void setUnlitTorch(String unlitTorch) {
+        this.unlitTorch = unlitTorch;
     }
 }

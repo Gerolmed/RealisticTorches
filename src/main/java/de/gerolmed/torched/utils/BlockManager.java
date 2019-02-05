@@ -48,6 +48,11 @@ public class BlockManager implements Runnable {
         return persistants.contains(loc);
     }
 
+    public boolean isUnlit(Block block) {
+        Location loc = block.getLocation();
+        return unlits.contains(loc);
+    }
+
     public void removeBlock(Block block) {
 
         if(!blockCache.containsKey(block.getLocation()))
@@ -73,6 +78,22 @@ public class BlockManager implements Runnable {
         persistants.remove(block.getLocation());
     }
 
+    public void addUnlit(Block block) {
+
+        if(unlits.contains(block.getLocation()))
+            return;
+
+        unlits.add(block.getLocation());
+    }
+
+    public void removeUnlit(Block block) {
+
+        if(!unlits.contains(block.getLocation()))
+            return;
+
+        unlits.remove(block.getLocation());
+    }
+
     @SuppressWarnings("deprecation")
     public void run() {
 
@@ -92,14 +113,15 @@ public class BlockManager implements Runnable {
             byte direction = location.getBlock().getData();
             if(plugin.getDataHolder().isMakeAir())
                 location.getBlock().setType(Material.AIR);
-            else
+            else {
+                removeBlock(location.getBlock());
                 location.getBlock().setTypeIdAndData(material.ordinal(), direction, true);
-
-
-            removeBlock(location.getBlock());
+                addUnlit(location.getBlock());
+            }
         }
     }
 
+    @SuppressWarnings("Duplicates")
     public void loadFromYml() {
         try {
             ConfigurationSection configurationSection = ConfigHolder.Configs.TORCHES.getConfig().getConfigurationSection("list");
@@ -132,6 +154,22 @@ public class BlockManager implements Runnable {
 
         } catch (Exception ex) {
             System.out.println("Permanent torch data didn't load properly!");
+        }
+        try {
+            ConfigurationSection configurationSection = ConfigHolder.Configs.TORCHES.getConfig().getConfigurationSection("unlits");
+
+            for (String key : configurationSection.getValues(false).keySet()) {
+                TorchLocation torchLocation = (TorchLocation) configurationSection.get(key + ".loc");
+                Location location = torchLocation.toLocation();
+
+                if(location == null)
+                    continue;
+
+                unlits.add(location);
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Unlit torch data didn't load properly!");
         }
     }
 

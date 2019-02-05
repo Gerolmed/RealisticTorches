@@ -24,6 +24,14 @@ public class BlockListener extends BasicEvent {
 
         Player player = event.getPlayer();
 
+        if(event.getBlock().getType() == Material.REDSTONE_TORCH_ON) {
+            if(event.getItemInHand().hasItemMeta() &&
+                    event.getItemInHand().getItemMeta().hasDisplayName() &&
+                    event.getItemInHand().getItemMeta().getDisplayName().equals(plugin.getDataHolder().getUnlitTorch())) {
+                plugin.getBlockManager().addUnlit(event.getBlock());
+            }
+        }
+
         if(event.getBlock().getType() == Material.TORCH) {
             if(event.getItemInHand().hasItemMeta() &&
                     event.getItemInHand().getItemMeta().hasDisplayName() &&
@@ -57,7 +65,20 @@ public class BlockListener extends BasicEvent {
 
                 blockManager.removePersistent(event.getBlock());
                 event.getBlock().getLocation().getWorld().dropItemNaturally(event.getBlock().getLocation(), item);
-            } else
+
+            } else if(blockManager.isUnlit(event.getBlock())) {
+                event.setCancelled(true);
+                event.getBlock().setType(Material.AIR);
+
+                ItemStack item = new ItemStack(Material.REDSTONE_TORCH_ON);
+                ItemMeta itemMeta = item.getItemMeta();
+                itemMeta.setDisplayName(plugin.getDataHolder().getUnlitTorch());
+                item.setItemMeta(itemMeta);
+
+                blockManager.removeUnlit(event.getBlock());
+                event.getBlock().getLocation().getWorld().dropItemNaturally(event.getBlock().getLocation(), item);
+            }
+            else
                 blockManager.removeBlock(event.getBlock());
         }
     }
