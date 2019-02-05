@@ -21,9 +21,9 @@ public class BlockManager implements Runnable {
     public BlockManager(Main plugin) {
         this.plugin = plugin;
 
-        blockCache = new HashMap<Location, Integer>();
-        persistants = new ArrayList<Location>();
-        unlits = new ArrayList<Location>();
+        blockCache = new HashMap<>();
+        persistants = new ArrayList<>();
+        unlits = new ArrayList<>();
 
         loadFromYml();
 

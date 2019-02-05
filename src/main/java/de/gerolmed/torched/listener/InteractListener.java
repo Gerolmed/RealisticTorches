@@ -35,7 +35,7 @@ public class InteractListener extends BasicEvent {
                 block.setTypeIdAndData(Material.TORCH.ordinal(), direction, true);
 
                 plugin.getBlockManager().addBlock(block, plugin.getDataHolder().getResetTime());
-
+                event.setCancelled(true);
             }
         }
     }
