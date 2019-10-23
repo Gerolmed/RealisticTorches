@@ -2,7 +2,7 @@
   <artifact type="jar" name="JarOutput">
     <output-path>$USER_HOME$/AppData/Roaming/.minecraft/SERVER/plugins</output-path>
     <root id="archive" name="RealisticTorches.jar">
-      <element id="module-output" name="Torched" />
+      <element id="module-output" name="TestPlugin" />
     </root>
   </artifact>
 </component>

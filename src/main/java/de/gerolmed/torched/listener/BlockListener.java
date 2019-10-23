@@ -24,13 +24,21 @@ public class BlockListener extends BasicEvent {
 
         Player player = event.getPlayer();
 
+        if(event.getBlock().getType() == Material.REDSTONE_TORCH_ON) {
+            if(event.getItemInHand().hasItemMeta() &&
+                    event.getItemInHand().getItemMeta().hasDisplayName() &&
+                    event.getItemInHand().getItemMeta().getDisplayName().equals(plugin.getDataHolder().getUnlitTorch())) {
+                plugin.getBlockManager().addUnlit(event.getBlock());
+            }
+        }
+
         if(event.getBlock().getType() == Material.TORCH) {
             if(event.getItemInHand().hasItemMeta() &&
                     event.getItemInHand().getItemMeta().hasDisplayName() &&
                         event.getItemInHand().getItemMeta().getDisplayName().equals(plugin.getDataHolder().getPermaTorch())) {
                 plugin.getBlockManager().addPersistent(event.getBlock());
             }
-            else if(plugin.getDataHolder().isEnablePermanentPermission() && player.hasPermission(plugin.getDataHolder().getPermanentPermssion()))
+            else if(plugin.getDataHolder().isEnablePermanentPermission() && player.hasPermission(plugin.getDataHolder().getPermanentPermission()))
                 return;
             else if(plugin.getDataHolder().isEnableCreativePermanent() && player.getGameMode() == GameMode.CREATIVE)
                 return;
@@ -43,9 +51,10 @@ public class BlockListener extends BasicEvent {
     @EventHandler(priority =  EventPriority.MONITOR)
     public void onBreak(BlockBreakEvent event) {
 
+        Material type = event.getBlock().getType();
+        BlockManager blockManager = plugin.getBlockManager();
 
-        if(event.getBlock().getType() == Material.TORCH) {
-            BlockManager blockManager = plugin.getBlockManager();
+        if(type == Material.TORCH) {
             if(blockManager.isPersistent(event.getBlock())) {
                 event.setCancelled(true);
                 event.getBlock().setType(Material.AIR);
@@ -57,8 +66,24 @@ public class BlockListener extends BasicEvent {
 
                 blockManager.removePersistent(event.getBlock());
                 event.getBlock().getLocation().getWorld().dropItemNaturally(event.getBlock().getLocation(), item);
+
             } else
                 blockManager.removeBlock(event.getBlock());
+        }
+
+        if(type == Material.REDSTONE_TORCH_ON || type == Material.REDSTONE_TORCH_OFF) {
+            if(blockManager.isUnlit(event.getBlock())) {
+                event.setCancelled(true);
+                event.getBlock().setType(Material.AIR);
+
+                ItemStack item = new ItemStack(Material.REDSTONE_TORCH_ON);
+                ItemMeta itemMeta = item.getItemMeta();
+                itemMeta.setDisplayName(plugin.getDataHolder().getUnlitTorch());
+                item.setItemMeta(itemMeta);
+
+                blockManager.removeUnlit(event.getBlock());
+                event.getBlock().getLocation().getWorld().dropItemNaturally(event.getBlock().getLocation(), item);
+            }
         }
     }
 }

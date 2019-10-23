@@ -5,7 +5,8 @@ import org.bukkit.ChatColor;
 public class DataHolder {
     private int resetTime = 60*10;
     private String permaTorch = "&fPermanent Torch",
-            permanentPermission = "torch.permanent";
+            permanentPermission = "torch.permanent",
+            unlitTorch = "torch.unlit";
     private boolean enableCrafting = true,
             expensiveCrafting = false,
             enablePermanentPermission = false,
@@ -16,7 +17,8 @@ public class DataHolder {
         try {
             setResetTime(ConfigHolder.Configs.CONFIG.getConfig().getInt("resetTime"));
             setPermaTorch(ConfigHolder.Configs.CONFIG.getConfig().getString("permaTorch"));
-            setPermanentPermssion(ConfigHolder.Configs.CONFIG.getConfig().getString("permanentPermission"));
+            setPermanentPermission(ConfigHolder.Configs.CONFIG.getConfig().getString("permanentPermission"));
+            setUnlitTorch(ConfigHolder.Configs.CONFIG.getConfig().getString("unlitTorch"));
             setEnableCrafting(ConfigHolder.Configs.CONFIG.getConfig().getBoolean("enableCrafting"));
             setExpensiveCrafting(ConfigHolder.Configs.CONFIG.getConfig().getBoolean("expensiveCrafting"));
             setEnableCreativePermanent(ConfigHolder.Configs.CONFIG.getConfig().getBoolean("enableCreativePermanent"));
@@ -60,11 +62,11 @@ public class DataHolder {
         this.expensiveCrafting = expensiveCrafting;
     }
 
-    public String getPermanentPermssion() {
+    public String getPermanentPermission() {
         return permanentPermission;
     }
 
-    public void setPermanentPermssion(String permanentPermission) {
+    public void setPermanentPermission(String permanentPermission) {
         this.permanentPermission = permanentPermission;
     }
 
@@ -90,5 +92,13 @@ public class DataHolder {
 
     public void setMakeAir(boolean makeAir) {
         this.makeAir = makeAir;
+    }
+
+    public String getUnlitTorch() {
+        return ChatColor.translateAlternateColorCodes('&', unlitTorch);
+    }
+
+    public void setUnlitTorch(String unlitTorch) {
+        this.unlitTorch = unlitTorch;
     }
 }

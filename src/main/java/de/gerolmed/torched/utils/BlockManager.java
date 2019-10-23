@@ -21,9 +21,9 @@ public class BlockManager implements Runnable {
     public BlockManager(Main plugin) {
         this.plugin = plugin;
 
-        blockCache = new HashMap<Location, Integer>();
-        persistants = new ArrayList<Location>();
-        unlits = new ArrayList<Location>();
+        blockCache = new HashMap<>();
+        persistants = new ArrayList<>();
+        unlits = new ArrayList<>();
 
         loadFromYml();
 
@@ -46,6 +46,11 @@ public class BlockManager implements Runnable {
     public boolean isPersistent(Block block) {
         Location loc = block.getLocation();
         return persistants.contains(loc);
+    }
+
+    public boolean isUnlit(Block block) {
+        Location loc = block.getLocation();
+        return unlits.contains(loc);
     }
 
     public void removeBlock(Block block) {
@@ -73,6 +78,22 @@ public class BlockManager implements Runnable {
         persistants.remove(block.getLocation());
     }
 
+    public void addUnlit(Block block) {
+
+        if(unlits.contains(block.getLocation()))
+            return;
+
+        unlits.add(block.getLocation());
+    }
+
+    public void removeUnlit(Block block) {
+
+        if(!unlits.contains(block.getLocation()))
+            return;
+
+        unlits.remove(block.getLocation());
+    }
+
     @SuppressWarnings("deprecation")
     public void run() {
 
@@ -92,14 +113,15 @@ public class BlockManager implements Runnable {
             byte direction = location.getBlock().getData();
             if(plugin.getDataHolder().isMakeAir())
                 location.getBlock().setType(Material.AIR);
-            else
+            else {
+                removeBlock(location.getBlock());
                 location.getBlock().setTypeIdAndData(material.ordinal(), direction, true);
-
-
-            removeBlock(location.getBlock());
+                addUnlit(location.getBlock());
+            }
         }
     }
 
+    @SuppressWarnings("Duplicates")
     public void loadFromYml() {
         try {
             ConfigurationSection configurationSection = ConfigHolder.Configs.TORCHES.getConfig().getConfigurationSection("list");
@@ -133,6 +155,22 @@ public class BlockManager implements Runnable {
         } catch (Exception ex) {
             System.out.println("Permanent torch data didn't load properly!");
         }
+        try {
+            ConfigurationSection configurationSection = ConfigHolder.Configs.TORCHES.getConfig().getConfigurationSection("unlit");
+
+            for (String key : configurationSection.getValues(false).keySet()) {
+                TorchLocation torchLocation = (TorchLocation) configurationSection.get(key + ".loc");
+                Location location = torchLocation.toLocation();
+
+                if(location == null)
+                    continue;
+
+                unlits.add(location);
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Unlit torch data didn't load properly!");
+        }
     }
 
     public void saveYml() {
@@ -151,6 +189,15 @@ public class BlockManager implements Runnable {
             ConfigHolder.Configs.TORCHES.getConfig().set("permanent", null);
             for(Location loc : persistants) {
                 ConfigHolder.Configs.TORCHES.getConfig().set("permanent."+i+".loc", new TorchLocation(loc));
+                i++;
+            }
+        }
+
+        {
+            int i = 0;
+            ConfigHolder.Configs.TORCHES.getConfig().set("unlit", null);
+            for(Location loc : unlits) {
+                ConfigHolder.Configs.TORCHES.getConfig().set("unlit."+i+".loc", new TorchLocation(loc));
                 i++;
             }
         }

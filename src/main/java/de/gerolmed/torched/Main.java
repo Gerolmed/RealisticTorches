@@ -1,6 +1,7 @@
 package de.gerolmed.torched;
 
 import de.gerolmed.torched.listener.BlockListener;
+import de.gerolmed.torched.listener.InteractListener;
 import de.gerolmed.torched.recipes.RecipeManager;
 import de.gerolmed.torched.utils.BlockManager;
 import de.gerolmed.torched.utils.TorchLocation;
@@ -38,6 +39,7 @@ public class Main extends JavaPlugin {
         new RecipeManager(this);
 
         new BlockListener(this);
+        new InteractListener(this);
     }
 
     @Override
